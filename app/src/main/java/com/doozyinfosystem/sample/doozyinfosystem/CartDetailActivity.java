@@ -2,8 +2,8 @@ package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,10 +21,9 @@ import java.text.NumberFormat;
 
 public class CartDetailActivity extends AppCompatActivity {
     private static final int CHECK_OUT_MENU = 555;
-    public Button button;
     Product product;
     int buttonState = 0;
-
+    public Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

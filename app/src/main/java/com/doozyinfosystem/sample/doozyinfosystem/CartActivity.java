@@ -14,8 +14,8 @@ import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
     public static final String ITEM_ID = "ITEM_ID";
-    public static final String DETAIL_REQUEST_DATA="DETAIL_REQUEST_DATA";
     private static final int REQUEST_CODE = 1012;
+    public static final String DETAIL_REQUEST_DATA="DETAIL_REQUEST_DATA";
     private List<Product> cartItems = DataProvider.getCartItems();
 private ListView listView;
     private ProductArrayAdapterList adapter;

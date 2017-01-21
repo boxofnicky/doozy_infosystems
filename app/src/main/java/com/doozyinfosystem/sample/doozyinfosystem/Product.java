@@ -7,17 +7,6 @@ import android.os.Parcelable;
  * Created by Doozy on 06-01-2017.
  */
 public class Product implements Parcelable {
-    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
-        @Override
-        public Product createFromParcel(Parcel source) {
-            return new Product(source);
-        }
-
-        @Override
-        public Product[] newArray(int size) {
-            return new Product[size];
-        }
-    };
     private String id;
     private String name;
     private String desc;
@@ -28,13 +17,6 @@ public class Product implements Parcelable {
         this.name = name;
         this.desc = description;
         this.price=price;
-    }
-
-    protected Product(Parcel in) {
-        this.id = in.readString();
-        this.name = in.readString();
-        this.desc = in.readString();
-        this.price = in.readDouble();
     }
 
     public String getId() {
@@ -48,6 +30,8 @@ public class Product implements Parcelable {
     public String getDesc() {
         return this.desc;
     }
+
+
 
     public double getPrice() {
         return this.price;
@@ -65,4 +49,23 @@ public class Product implements Parcelable {
         dest.writeString(this.desc);
         dest.writeDouble(this.price);
     }
+
+    protected Product(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.desc = in.readString();
+        this.price = in.readDouble();
+    }
+
+    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel source) {
+            return new Product(source);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 }

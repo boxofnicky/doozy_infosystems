@@ -9,9 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -22,15 +22,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String RESULT_DATA = "RESULT_DATA";
     private static final int REQUEST_CODE = 1212;
     private static final int LOGIN = 112233;
+    public static Customer currentUser;
+    private CoordinatorLayout coordinator;
     private static final int ON_WEB = 1111;
     private static final int ABOUT = 1112;
     private static final String topDiaplayImage = "logoAbout.png";
     private static final String webAdd = "https://m.facebook.com/Doozy-Infosystems-1627013727572229";
     private static final String[] emailAdd = {"doozyinfosystems@gmail.com", "box.of.nicky@gmail.com"};
     private static final int SHOPPING_CART = 2200;
-    public static Customer currentUser;
     final private List<Product> products = DataProvider.getProducts();
-    private CoordinatorLayout coordinator;
     private Toolbar toolbar;
 
     @Override

@@ -4,17 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Customer implements Parcelable {
-    public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {
-        @Override
-        public Customer createFromParcel(Parcel source) {
-            return new Customer(source);
-        }
-
-        @Override
-        public Customer[] newArray(int size) {
-            return new Customer[size];
-        }
-    };
     private String customerID;
     private String customerName;
     private String customerEmail;
@@ -29,15 +18,6 @@ public class Customer implements Parcelable {
         this.customerPassword = customerPassword;
         this.customerAddress = customerAddress;
         this.customerPhone = customerPhone;
-    }
-
-    protected Customer(Parcel in) {
-        this.customerID = in.readString();
-        this.customerName = in.readString();
-        this.customerEmail = in.readString();
-        this.customerPhone = in.readString();
-        this.customerAddress = in.readString();
-        this.customerPassword = in.readString();
     }
 
     public String getCustomerID() {
@@ -102,4 +82,25 @@ public class Customer implements Parcelable {
         dest.writeString(this.customerAddress);
         dest.writeString(this.customerPassword);
     }
+
+    protected Customer(Parcel in) {
+        this.customerID = in.readString();
+        this.customerName = in.readString();
+        this.customerEmail = in.readString();
+        this.customerPhone = in.readString();
+        this.customerAddress = in.readString();
+        this.customerPassword = in.readString();
+    }
+
+    public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {
+        @Override
+        public Customer createFromParcel(Parcel source) {
+            return new Customer(source);
+        }
+
+        @Override
+        public Customer[] newArray(int size) {
+            return new Customer[size];
+        }
+    };
 }
