@@ -38,9 +38,10 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/cartListView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cartHeader"></ListView>
+        app:layoutManager="LinearLayoutManager"
+        android:layout_below="@+id/cartHeader"/>
 </RelativeLayout>

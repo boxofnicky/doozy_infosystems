@@ -1,6 +1,7 @@
 package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,15 @@ public class SettingActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        String[] arr = getResources().getStringArray(R.array.settings_items);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, arr);
-        ListView listView= (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter);
+        getFragmentManager().beginTransaction().add(R.id.setting_frame, new SettingFragment()).commit();
 
     }
 
+    public static class SettingFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.setting);
+        }
+    }
 }

@@ -13,7 +13,7 @@
     <string name="about">About</string>
     <string name="shopping_cart">Shopping Cart</string>
     <string name="title_activity_activity__about">Doozy Infosystems</string>
-    <string name="title_activity_acting">ActingActivity</string>
+    <string name="title_activity_acting">Settings</string>
     <string name="title_activity_detail">Item Details</string>
     <string name="title_activity_cart">Cart Items</string>
     <string name="cartItemDetails">Item Details</string>
@@ -31,4 +31,11 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="grid_view_pref">check_box_preference_1</string>
+    <string name="grid_summary">Display the main window in grid view.</string>
+    <string name="grid_pref_title">Display in grid</string>
+    <string name="title_activity_files">FilesActivity</string>
+    <string name="create_file">Create</string>
+    <string name="read_file">Read</string>
+    <string name="delete_file">Delete</string>
 </resources>

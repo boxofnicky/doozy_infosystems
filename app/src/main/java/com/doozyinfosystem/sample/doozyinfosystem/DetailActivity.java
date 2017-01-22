@@ -80,7 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(MainActivity.RESULT_DATA, product.getName() + " added to your cart.");
         setResult(MainActivity.RESULT_OK, intent);
-        DataProvider.addToCart(product);
+        DataProvider.addToCart(this,product);
         Snackbar.make(coordinatorLayout, product.getName() + " added to your cart.", Snackbar.LENGTH_LONG).setAction("Show Cart", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

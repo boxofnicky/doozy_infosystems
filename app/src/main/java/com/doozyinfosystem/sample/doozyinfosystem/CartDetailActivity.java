@@ -24,6 +24,7 @@ public class CartDetailActivity extends AppCompatActivity {
     Product product;
     int buttonState = 0;
     public Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,6 @@ public class CartDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.detailRelative);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -40,7 +40,7 @@ public class CartDetailActivity extends AppCompatActivity {
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
         button = new Button(this);
-        button.setText("Remove from cart");
+        button.setText("Add to cart.");
         button.setLayoutParams(params);
         relativeLayout.addView(button);
 
@@ -49,14 +49,12 @@ public class CartDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-cartFlip();
+                cartFlip();
             }
         });
 
 
-        String id = getIntent().getStringExtra(CartActivity.ITEM_ID);
-        product = DataProvider.getProductMap().get(id);
-
+        product = getIntent().getParcelableExtra(MainActivity.PRODUCT_ID);
         TextView nameView = (TextView) findViewById(R.id.nameText);
         nameView.setText(product.getName());
 
@@ -81,23 +79,21 @@ cartFlip();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0,CHECK_OUT_MENU,222,"Check Out").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-         return super.onCreateOptionsMenu(menu);
+        menu.add(0, CHECK_OUT_MENU, 222, "Check Out").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==CHECK_OUT_MENU)
-        {
-           cartFlip();
+        if (item.getItemId() == CHECK_OUT_MENU) {
+            cartFlip();
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    public void cartFlip()
-    {
-        if(buttonState==0) {
+    public void cartFlip() {
+        if (buttonState == 0) {
             DataProvider.getCartItems().remove(product);
             Intent intent = new Intent();
             intent.putExtra(CartActivity.DETAIL_REQUEST_DATA, product.getName());
@@ -105,16 +101,14 @@ cartFlip();
             setResult(RESULT_OK, intent);
             button.setText("Add to Cart");
             buttonState = 1;
-        }
-        else
-        {
+        } else {
             DataProvider.getCartItems().add(product);
             Intent intent = new Intent();
-            intent.putExtra(CartActivity.DETAIL_REQUEST_DATA,product.getName());
+            intent.putExtra(CartActivity.DETAIL_REQUEST_DATA, product.getName());
             Toast.makeText(CartDetailActivity.this, "Item successfully added to Cart.", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_CANCELED,intent);
+            setResult(RESULT_CANCELED, intent);
             button.setText("Remove from Cart");
-            buttonState=0;
+            buttonState = 0;
         }
     }
 

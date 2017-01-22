@@ -1,12 +1,15 @@
 package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String RESULT_DATA = "RESULT_DATA";
     private static final int REQUEST_CODE = 1212;
     private static final int LOGIN = 112233;
+    private static final int FILES = 212121;
     public static Customer currentUser;
     private CoordinatorLayout coordinator;
     private static final int ON_WEB = 1111;
@@ -41,9 +45,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         coordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
 
+        SharedPreferences settings=PreferenceManager.getDefaultSharedPreferences(this);
+        boolean grid=settings.getBoolean(getString(R.string.grid_view_pref),false);
 
         ProductDataAdapter adapter = new ProductDataAdapter(this, products);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        if(grid)
+            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
         recyclerView.setAdapter(adapter);
 
 //
@@ -104,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, ON_WEB, 101, R.string.onWeb);
         menu.add(0, ABOUT, 102, R.string.about);
         menu.add(0, LOGIN, 103, "Login");
+        menu.add(0, FILES, 104, "File Manager");
         return true;
     }
 
@@ -138,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.shopping_cart:
                 Intent cartIntent = new Intent(this, CartActivity.class);
                 startActivity(cartIntent);
+                return true;
+            case FILES:
+                Intent filesIntent=new Intent(this,FilesActivity.class);
+                startActivity(filesIntent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

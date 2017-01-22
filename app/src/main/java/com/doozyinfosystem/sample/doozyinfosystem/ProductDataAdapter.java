@@ -2,8 +2,10 @@ package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,16 @@ public class ProductDataAdapter extends RecyclerView.Adapter<ProductDataAdapter.
     @Override
     public DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.list_view, parent, false);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean grid_pref = sharedPreferences.getBoolean(context.getString(R.string.grid_view_pref), false);
+        int i;
+        if (grid_pref)
+            i = R.layout.grid_view;
+        else
+            i = R.layout.list_view;
+
+        View view = inflater.inflate(i, parent, false);
         DataViewHolder viewHolder = new DataViewHolder(view);
         return viewHolder;
 
@@ -67,7 +78,7 @@ public class ProductDataAdapter extends RecyclerView.Adapter<ProductDataAdapter.
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, CartDetailActivity.class);
                 intent.putExtra(MainActivity.PRODUCT_ID, nameList.get(position));
                 context.startActivity(intent);
 

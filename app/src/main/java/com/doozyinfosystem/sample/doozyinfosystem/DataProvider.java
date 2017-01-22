@@ -1,5 +1,7 @@
 package com.doozyinfosystem.sample.doozyinfosystem;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +13,9 @@ import java.util.Map;
 public class DataProvider {
     private static List<Product> products = new ArrayList<>();
     private static Map<String, Product> productMap = new HashMap<String, Product>();
-    private static List<Product> cartItems=new ArrayList<>();
-    private static List<Customer> customerList=new ArrayList<>();
-    private static Map<String,Customer> customerMap=new HashMap<>();
+    private static List<Product> cartItems = JSONHelper.importJson();
+    private static List<Customer> customerList = new ArrayList<>();
+    private static Map<String, Customer> customerMap = new HashMap<>();
 
     static {
         addItem("scanner101", "RS-734 Scanner", "Automatic scanner and other scanner description..text laldksjfh", 5000.00);
@@ -25,10 +27,10 @@ public class DataProvider {
         addItem("keyboard107", "Keyboard DS847", "Details features and other description about the item..text", 1100);
         addItem("scanner101", "RS-734 Scanner", "Automatic scanner and other scanner description..text laldksjfh", 5000.00);
 
-            addCustomer(new Customer("box.of.nicky", "Nicky Ghanghas", "box.of.nicky@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
-            addCustomer(new Customer("neokit2008", "Naveen Kumar", "neokit2008@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
-            addCustomer(new Customer("doozyinfosystems", "Doozy Infosystems", "doozyinfosystems@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
-        }
+        addCustomer(new Customer("box.of.nicky", "Nicky Ghanghas", "box.of.nicky@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
+        addCustomer(new Customer("neokit2008", "Naveen Kumar", "neokit2008@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
+        addCustomer(new Customer("doozyinfosystems", "Doozy Infosystems", "doozyinfosystems@gmail.com", "GH4NGH4SN4V33N", "R-Z 54, Sai Baba Enclave(Part-B), Najafgarh, New Delhi-110043", "8130805381"));
+    }
 
 
     public static void addCustomer(Customer user) {
@@ -37,14 +39,17 @@ public class DataProvider {
     }
 
     public static List<Customer> getCustomerList() {
+
         return customerList;
     }
 
     public static Map<String, Customer> getCustomerMap() {
+
         return customerMap;
     }
 
     public static List<Product> getProducts() {
+
         return products;
     }
 
@@ -57,25 +62,24 @@ public class DataProvider {
         products.add(product);
         productMap.put(id, product);
     }
-public static List<Product> getCartItems(){
+
+    public static List<Product> getCartItems() {
         return cartItems;
-}
-
-
-
-public static boolean removeFromCart(String item){
-    Product product=productMap.get(item);
-    if(cartItems.contains(product)){
-        cartItems.remove(product);
-        return true;
     }
-    else
-        return false;
-}
 
 
+    public static boolean removeFromCart(String item) {
+        Product product = productMap.get(item);
+        if (cartItems.contains(product)) {
+            cartItems.remove(product);
+            return true;
+        } else
+            return false;
+    }
 
-    public static void addToCart(Product item){
+
+    public static void addToCart(Context context, Product item) {
         cartItems.add(item);
+        JSONHelper.exportJson(context, cartItems);
     }
 }
