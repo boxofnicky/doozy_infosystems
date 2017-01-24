@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -68,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private String userName;
-    private Customer customer;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
 
-        for (Customer c : DataProvider.getCustomerList()) {
+        for (User c : DataProvider.getUserList()) {
             if ((c.getCustomerEmail().equalsIgnoreCase(email)) | (c.getCustomerID().equalsIgnoreCase(email)))
                 return true;
 
@@ -356,17 +355,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         protected boolean authenticate() {
-            Customer cust = DataProvider.getCustomerMap().get(mEmail.toLowerCase());
+            User cust = DataProvider.getCustomerMap().get(mEmail.toLowerCase());
             if ((cust != null) && (cust.getCustomerPassword().equals(mPassword))) {
                 userName = mEmail.toLowerCase();
-                customer = cust;
+                user = cust;
                 return true;
 
             } else {
-                for (Customer c : DataProvider.getCustomerList()) {
+                for (User c : DataProvider.getUserList()) {
                     if ((c.getCustomerEmail().equals(mEmail.toLowerCase())) && (c.getCustomerPassword().equals(mPassword))) {
                         userName = c.getCustomerID().toLowerCase();
-                        customer = c;
+                        user = c;
                         return true;
                     }
                 }
@@ -385,7 +384,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void successfullLogin() {
         Intent intent = new Intent();
-        intent.putExtra(USER_NAME, customer);
+        intent.putExtra(USER_NAME, user);
         setResult(RESULT_OK, intent);
         SharedPreferences.Editor editor = getSharedPreferences(GLOBAL_SHARED_PREFS, MODE_PRIVATE).edit();
         editor.putString(USER_NAME, userName);

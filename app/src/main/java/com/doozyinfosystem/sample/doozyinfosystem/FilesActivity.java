@@ -57,7 +57,7 @@ public class FilesActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View v) {
-                boolean b = JSONHelper.exportJson(getBaseContext(), DataProvider.getCartItems());
+                boolean b = JSONHelper.exportJson(getBaseContext(), DataProvider.getCartItems(getBaseContext()));
                 if (b)
                     Toast.makeText(getBaseContext(), "Exported to JSON :" + Environment.getExternalStorageDirectory() + "/" + JSONHelper.FILE_NAME, Toast.LENGTH_LONG).show();
                 else
@@ -74,9 +74,9 @@ public class FilesActivity extends AppCompatActivity {
                 List<Product> list = new ArrayList<>();
                 list = JSONHelper.importJson();
 
-                TextView textView= (TextView) findViewById(R.id.content_file);
-                for(Product p:list)
-                    textView.append(p.getName()+"\t\t\t"+p.getPrice()+"\n");
+                TextView textView = (TextView) findViewById(R.id.content_file);
+                for (Product p : list)
+                    textView.append(p.getName() + "\t\t\t" + p.getPrice() + "\n");
             }
         });
 

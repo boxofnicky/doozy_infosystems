@@ -2,6 +2,7 @@ package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,17 +13,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.doozyinfosystem.sample.doozyinfosystem.db.DBSource;
+import com.doozyinfosystem.sample.doozyinfosystem.db.Tables;
 
 import java.text.NumberFormat;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 public class CartActivity extends AppCompatActivity {
     public static final String ITEM_ID = "ITEM_ID";
     private static final int REQUEST_CODE = 1012;
     public static final String DETAIL_REQUEST_DATA = "DETAIL_REQUEST_DATA";
-    private List<Product> cartItems = DataProvider.getCartItems();
+    private List<Product> cartItems;
     private RecyclerView recyclerView;
     private ProductDataAdapter adapter;
+    DBSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +38,25 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setLayout();
+    }
+
+    public void setLayout() {
+        dataSource = new DBSource(this);
+        dataSource.open();
+        try {
+            cartItems = DataProvider.getCartItems(this);
+        } catch (SQLiteException e) {
+            Toast.makeText(this, "Cart activity error.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView tvCartItems = (TextView) findViewById(R.id.cartCount);
         TextView tvCartCost = (TextView) findViewById(R.id.cartPrice);
         if (cartItems.isEmpty()) {
-            tvCartItems.setText("No Items in Cart");
+            tvCartItems.setText("No Items in CartItem");
         } else {
 
             tvCartItems.setText("Items: " + cartItems.size());
@@ -55,19 +77,7 @@ public class CartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        recyclerView.setAdapter(adapter);
-
-        TextView tvCartItems = (TextView) findViewById(R.id.cartCount);
-        TextView tvCartCost = (TextView) findViewById(R.id.cartPrice);
-        if (cartItems.isEmpty()) {
-            tvCartItems.setText("No Items in Cart");
-        } else {
-
-            tvCartItems.setText("Items: " + cartItems.size());
-            NumberFormat formatter = NumberFormat.getCurrencyInstance();
-            tvCartCost.setText("Total: " + formatter.format(getTotal()));
-        }
-
+        setLayout();
     }
 
     private double getTotal() {

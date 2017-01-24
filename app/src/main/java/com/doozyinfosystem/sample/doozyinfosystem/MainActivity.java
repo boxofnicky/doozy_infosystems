@@ -2,6 +2,7 @@ package com.doozyinfosystem.sample.doozyinfosystem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,12 +11,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.doozyinfosystem.sample.doozyinfosystem.db.DBSource;
+import com.doozyinfosystem.sample.doozyinfosystem.db.Tables;
 
 import java.util.List;
 
@@ -26,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1212;
     private static final int LOGIN = 112233;
     private static final int FILES = 212121;
-    public static Customer currentUser;
+    public static User currentUser;
     private CoordinatorLayout coordinator;
     private static final int ON_WEB = 1111;
     private static final int ABOUT = 1112;
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SHOPPING_CART = 2200;
     final private List<Product> products = DataProvider.getProducts();
     private Toolbar toolbar;
+    private DBSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +51,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         coordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
 
-        SharedPreferences settings=PreferenceManager.getDefaultSharedPreferences(this);
-        boolean grid=settings.getBoolean(getString(R.string.grid_view_pref),false);
+        createLayout();
 
-        ProductDataAdapter adapter = new ProductDataAdapter(this, products);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        if(grid)
-            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(adapter);
+            try {
+                if (dataSource.countRows(Tables.TABLE_USERS) == 0) {
+                for (User u : DataProvider.getUserList()) {
+                    dataSource.addUser(u);
+                }
+                } else {
+                    Toast.makeText(this, "User Database already exists", Toast.LENGTH_LONG).show();
+                }
+            } catch (SQLiteException e) {
+                e.printStackTrace();
 
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Product product = products.get(position);
-//                Intent detailIntent = new Intent(MainActivity.this, DetailActivity.class);
-//                detailIntent.putExtra(PRODUCT_ID, product.getId());
-//                startActivityForResult(detailIntent, REQUEST_CODE);
-//            }
-//        });
+                Toast.makeText(this, "Database error loading user details.", Toast.LENGTH_LONG).show();
+            }
+            Toast.makeText(this, "User Database updated.", Toast.LENGTH_LONG).show();
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -82,11 +86,67 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    public void createLayout() {
+        dataSource = new DBSource(this);
+        dataSource.open();
+        if (dataSource.countRows(Tables.TABLE_ITEMS) == 0) {
+            try {
+                for (Product p :
+                        products) {
+                    dataSource.addItem(p);
+
+                }
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Database error.", Toast.LENGTH_LONG).show();
+
+            }
+            Toast.makeText(this, "Database updated.", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(this, "Database allready exists", Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            if (dataSource.countRows(Tables.TABLE_CART) == 0) {
+                for (Product u : DataProvider.getCartItems(this)) {
+                    dataSource.addItem(u);
+                }
+            } else {
+                Toast.makeText(this, "User Database already exists", Toast.LENGTH_LONG).show();
+            }
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Database error loading user details.", Toast.LENGTH_LONG).show();
+        }
+        dataSource.close();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean grid = settings.getBoolean(getString(R.string.grid_view_pref), false);
+
+        //user name check
+
+        SharedPreferences preferences = getSharedPreferences(LoginActivity.GLOBAL_SHARED_PREFS, MODE_PRIVATE);
+        String username = preferences.getString(LoginActivity.USER_NAME, null);
+
+        List<Product> productsFromDB = dataSource.getAllItems();
+        ProductDataAdapter adapter = new ProductDataAdapter(this, productsFromDB);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        if (grid)
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        else
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Snackbar.make(coordinator, "One item added to your cart. Proceed to cart?", Snackbar.LENGTH_LONG).setAction("Show Cart", new View.OnClickListener() {
+                Snackbar.make(coordinator, "One item added to your cart. Proceed to cart?", Snackbar.LENGTH_LONG).setAction("Show CartItem", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(MainActivity.this, "Opens cart here.", Toast.LENGTH_LONG).show();
@@ -103,6 +163,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dataSource.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        createLayout();
     }
 
     @Override
@@ -149,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(cartIntent);
                 return true;
             case FILES:
-                Intent filesIntent=new Intent(this,FilesActivity.class);
+                Intent filesIntent = new Intent(this, FilesActivity.class);
                 startActivity(filesIntent);
                 return true;
         }

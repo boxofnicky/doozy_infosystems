@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:title="@string/grid_pref_title"
         android:summary="@string/grid_summary"
         android:key="@string/grid_view_pref" />

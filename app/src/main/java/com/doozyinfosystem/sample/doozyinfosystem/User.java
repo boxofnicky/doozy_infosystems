@@ -1,9 +1,12 @@
 package com.doozyinfosystem.sample.doozyinfosystem;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Customer implements Parcelable {
+import com.doozyinfosystem.sample.doozyinfosystem.db.Tables;
+
+public class User implements Parcelable {
     private String customerID;
     private String customerName;
     private String customerEmail;
@@ -11,7 +14,7 @@ public class Customer implements Parcelable {
     private String customerAddress;
     private String customerPhone;
 
-    public Customer(String customerID, String customerName, String customerEmail, String customerPassword, String customerAddress, String customerPhone) {
+    public User(String customerID, String customerName, String customerEmail, String customerPassword, String customerAddress, String customerPhone) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -19,6 +22,7 @@ public class Customer implements Parcelable {
         this.customerAddress = customerAddress;
         this.customerPhone = customerPhone;
     }
+
 
     public String getCustomerID() {
         return customerID;
@@ -83,7 +87,7 @@ public class Customer implements Parcelable {
         dest.writeString(this.customerPassword);
     }
 
-    protected Customer(Parcel in) {
+    protected User(Parcel in) {
         this.customerID = in.readString();
         this.customerName = in.readString();
         this.customerEmail = in.readString();
@@ -92,15 +96,26 @@ public class Customer implements Parcelable {
         this.customerPassword = in.readString();
     }
 
-    public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
         @Override
-        public Customer createFromParcel(Parcel source) {
-            return new Customer(source);
+        public User createFromParcel(Parcel source) {
+            return new User(source);
         }
 
         @Override
-        public Customer[] newArray(int size) {
-            return new Customer[size];
+        public User[] newArray(int size) {
+            return new User[size];
         }
     };
+
+    public ContentValues getValues() {
+        ContentValues values = new ContentValues(6);
+        values.put(Tables.COLUMN_USER_ID, customerID);
+        values.put(Tables.COLUMN_NAME, customerName);
+        values.put(Tables.COLUMN_EMAIL, customerEmail);
+        values.put(Tables.COLUMN_PASS, customerPassword);
+        values.put(Tables.COLUMN_ADDRESS, customerAddress);
+        values.put(Tables.COLUMN_PHONE, customerPhone);
+        return values;
+    }
 }

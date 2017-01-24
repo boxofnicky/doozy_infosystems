@@ -81,7 +81,7 @@ public class DetailActivity extends AppCompatActivity {
         intent.putExtra(MainActivity.RESULT_DATA, product.getName() + " added to your cart.");
         setResult(MainActivity.RESULT_OK, intent);
         DataProvider.addToCart(this,product);
-        Snackbar.make(coordinatorLayout, product.getName() + " added to your cart.", Snackbar.LENGTH_LONG).setAction("Show Cart", new View.OnClickListener() {
+        Snackbar.make(coordinatorLayout, product.getName() + " added to your cart.", Snackbar.LENGTH_LONG).setAction("Show CartItem", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(DetailActivity.this, "This display cart window.", Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, ADD_CART, 222, "Add to Cart").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, ADD_CART, 222, "Add to CartItem").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
 
